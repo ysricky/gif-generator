@@ -1,28 +1,29 @@
 // asynchronous javascript
-const image = document.querySelector('img');
-const inputText = document.querySelector('input');
 const btnSearch = document.querySelector('.search');
 const btnNext = document.querySelector('.next');
+const inputText = document.querySelector('input');
 let inputKeyword;
 
 // promises
-const getGif = (keyword) => {
-  fetch(
-    `https://api.giphy.com/v1/gifs/translate?api_key=QG5BvJxlshVGggQvolh6RucaEXHw4cqQ&s=${keyword}`,
-    { mode: 'cors' }
-  )
-    .then((response) => response.json())
-    .then((response) => {
-      image.src = response.data.images.original.url;
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-};
+async function getGif(keyword) {
+  const image = document.querySelector('img');
+  console.log('log');
+
+  try {
+    const gifData = await fetch(
+      `https://api.giphy.com/v1/gifs/translate?api_key=QG5BvJxlshVGggQvolh6RucaEXHw4cqQ&s=${keyword}`,
+      { mode: 'cors' }
+    );
+    const gifImage = await gifData.json();
+    image.src = gifImage.data.images.original.url;
+  } catch (err) {
+    console.error('Field is empty');
+  }
+}
 
 btnSearch.addEventListener('click', () => {
-  inputKeyword = inputText.value;
   getGif(inputText.value);
+  inputKeyword = inputText.value;
   inputText.value = '';
 });
 
